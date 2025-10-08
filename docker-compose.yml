@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 services:
   backend:
@@ -15,11 +15,13 @@ services:
       - db
 
   db:
-    image: mariadb:11
+    image: mariadb:12.0.2
     container_name: time-manager-db
     environment:
       - MARIADB_ROOT_PASSWORD=root
       - MARIADB_DATABASE=time_manager
+      - MARIADB_USER=app_user
+      - MARIADB_PASSWORD=root
     ports:
       - "3306:3306"
     volumes:
