@@ -1,0 +1,50 @@
+name: Pipeline CI-CD
+
+on:
+  push:
+    branches: 
+    - main
+  pull_request:
+    branches: 
+    - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Node.js Setup ${{ matrix.node.js-version }}
+      uses: actions/setup-node@v
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install Dependencies
+      run: npm install
+
+  deploy:
+    name: Déployement
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+      # Connexion a docker avec mes variables secret stocké dans github
+    steps:
+    - name: Login DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Construction et push de l'image
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: backend/Dockerfile 
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/time-manager-backend:latest
