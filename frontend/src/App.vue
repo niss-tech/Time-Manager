@@ -1,13 +1,15 @@
 <template>
   <div id="app">
     <Header />
-    <Home />
+
+    <router-view></router-view>
   </div>
 </template>
 
 <script setup>
 import Header from './components/Header.vue'
 import Home from './pages/Home.vue'
+import Login from './pages/Login.vue'
 </script>
 
 <style>
