@@ -49,7 +49,14 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
+<<<<<<< HEAD
         context: ./backend
         file: ./backend/Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/time-manager-backend:latest 
+=======
+        context: .
+        file: backend/Dockerfile 
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/time-manager-backend:latest
+>>>>>>> cfd1068ca33a4606128378ba80eb81235b8630a5
