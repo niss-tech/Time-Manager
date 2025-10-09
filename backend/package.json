@@ -1,12 +1,35 @@
 {
-  "name": "backend",
+  "name": "time-manager",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \\\"Error: no test specified\\\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+    },
+    
+    "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niss-tech/Time-Manager.git"
   },
-  "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/niss-tech/Time-Manager/issues"
+  },
+  "homepage": "https://github.com/niss-tech/Time-Manager#readme",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "docker": "^1.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "http-errors": "^2.0.0",
+    "mysql2": "^3.15.2",
+    "prisma": "^6.17.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
 }
