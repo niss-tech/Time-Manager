@@ -2,8 +2,8 @@
   <header>
     <h1>Time Manager</h1>
     <nav>
-      <a href="#">Home</a>
-      <a href="#">Dashboard</a>
+      <a href="/">Home</a>
+      <a href="/login">Login</a>
     </nav>
   </header>
 </template>
