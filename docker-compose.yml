@@ -1,0 +1,32 @@
+
+
+services:
+  backend:
+    build: ./backend
+    container_name: time-manager-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=time_manager
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:12.0.2
+    container_name: time-manager-db
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=time_manager
+      - MARIADB_USER=app_user
+      - MARIADB_PASSWORD=root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./backend:/app
+
+volumes:
+  db_data:
