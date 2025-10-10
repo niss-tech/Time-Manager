@@ -2,6 +2,7 @@
   "name": "time-manager",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
     "start": "node index.js",
@@ -18,7 +19,9 @@
   },
   "homepage": "https://github.com/niss-tech/Time-Manager#readme",
   "dependencies": {
+    "@prisma/client": "^6.17.1",
     "axios": "^1.12.2",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "docker": "^1.0.0",
     "dotenv": "^17.2.3",

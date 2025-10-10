@@ -1,22 +1,12 @@
-import express from "express";
-import { pool } from "./db.js";
+import { app } from "./app.js";
+import dotenv from 'dotenv'
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-app.use(express.json());
+dotenv.config()
 
-app.get("/", (req, res) => {
-  res.send("Backend API is running ✅");
-});
+const PORT = process.env.PORT;
 
-app.get("/users", async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT * FROM users");
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Table not ready" });
-  }
-});
+app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}`);
+  });
 
 app.listen(PORT, () => console.log(`🚀 API running on port ${PORT}`));
