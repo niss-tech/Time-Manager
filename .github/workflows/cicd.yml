@@ -35,10 +35,10 @@ jobs:
     name: Déploiement
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Checkout Code   # ✅ ajouté ici
+      - name: Checkout Code  
         uses: actions/checkout@v2
 
       - name: Login DockerHub
