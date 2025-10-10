@@ -35,8 +35,8 @@ jobs:
     name: Déploiement
     needs: build-and-test
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/main' 
-
+    # if: github.ref == 'refs/heads/main'
+      # Connexion a docker avec mes variables secret stocké dans github
     steps:
       - name: Checkout Code  
         uses: actions/checkout@v2
