@@ -1,0 +1,140 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+ model Users {
+  idUser         Int            @id @default(autoincrement())
+  email          String         @unique
+  firstname      String
+  lastname       String
+  password       String
+  phone          Int
+  profile        String?
+  
+  //Relations avec la table Roles via UserRoles
+  roles          UserRoles[]
+
+  //Relation avec la table Teams en tant que manager
+  managerTeams  Teams[]        @relation("ManagerTeams")
+
+  //Relation avec la table Teams en tant que membre
+  memberTeams   TeamUser[]
+
+  //Relation avec la table Clocks
+  clocks        Clocks[]
+
+  //Relation avec la table Vacations
+  vacations     Vacations[]
+
+  //Relation avec la table Plannings
+  plannings     Plannings[]
+
+  //Relation avec la table Reports
+  reports       Reports[]
+}
+
+model Roles {
+  idRole         Int            @id @default(autoincrement())
+  name           String         @unique
+
+  //Relations avec la table Users via UserRoles
+  users          UserRoles[]
+}
+
+model UserRoles {
+  idUserRole     Int            @id @default(autoincrement())
+  userId         Int
+  roleId         Int
+
+//Relations
+  user          Users @relation(fields: [userId], references: [idUser])
+  role          Roles @relation(fields: [roleId], references: [idRole])
+
+  @@unique([userId, roleId])
+}
+
+model Teams {
+  idTeam        Int            @id @default(autoincrement())
+  name           String         @unique
+  description    String?
+  managerId      Int
+
+  //Relations avec la table Users en tant que manager
+  manager        Users          @relation("ManagerTeams", fields: [managerId], references: [idUser])
+
+  //Relations avec la table Users en tant que membre
+  members        TeamUser[]
+
+  //Relations avec la table Reports
+  reports        Reports[]
+}
+model TeamUser {
+  id             Int            @id @default(autoincrement())
+  teamId         Int
+  userId         Int
+
+  //Relations
+  team          Teams @relation(fields: [teamId], references: [idTeam])
+  user          Users @relation(fields: [userId], references: [idUser])
+
+  @@unique([teamId, userId])
+}
+
+model Clocks{
+  idClock        Int            @id @default(autoincrement())
+  userId         Int
+  clockIn        DateTime
+  clockOut       DateTime?
+  hoursWorked    Float?
+
+  //Relations
+  user          Users @relation(fields: [userId], references: [idUser])
+}
+
+model Vacations{
+  idVacation     Int            @id @default(autoincrement())
+  userId         Int
+  startDate      DateTime
+  endDate        DateTime
+  status         String         @default("pending") // pending, approved, rejected
+  createdAt      DateTime       @default(now())
+
+  //Relations
+  user          Users @relation(fields: [userId], references: [idUser])
+}
+
+model Plannings{
+  idPlanning     Int            @id @default(autoincrement())
+  userId         Int
+  date           DateTime
+  startTime      DateTime
+  endTime        DateTime
+
+  //Relations
+  user          Users @relation(fields: [userId], references: [idUser])
+}
+
+model Reports{
+  idReport       Int            @id @default(autoincrement())
+  kpi            String
+  startDate      DateTime
+  endDate        DateTime
+  createdAt      DateTime       @default(now())
+  userId         Int
+  teamId         Int
+
+  //Relations
+  user          Users @relation(fields: [userId], references: [idUser])
+  team          Teams @relation(fields: [teamId], references: [idTeam])
+}
