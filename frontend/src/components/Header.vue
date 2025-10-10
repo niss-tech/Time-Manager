@@ -1,28 +1,29 @@
 <template>
-  <header>
-    <h1>Time Manager</h1>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/login">Login</a>
-    </nav>
+  <header class="app-header">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="date fst-italic">10 October 2025</div>
+      <div class="time">15:18:17</div>
+    </div>
   </header>
 </template>
 
 <script setup></script>
 
 <style scoped>
-header {
+.app-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+  height: 44px; /* thin header */
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: #b8b1b1ff;
 }
-
-nav a {
-  margin-left: 1rem;
-  text-decoration: none;
-  color: #42b883;
-  font-weight: bold;
+.app-header .container {
+  padding: 0 1rem;
+  width: 100%;
+}
+.app-header .date,
+.app-header .time {
+  font-size: 0.9rem; /* keep it small and minimalist */
+  color: #495057;
 }
 </style>
