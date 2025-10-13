@@ -36,7 +36,6 @@
 <script setup>
 import { ref } from 'vue'
 
-// Demo data; replace with real user data when auth exists
 const firstName = ref('John')
 const lastName = ref('Doe')
 const email = ref('john.doe@example.com')
@@ -44,12 +43,10 @@ const phone = ref('+1 (555) 123-4567')
 const avatar = '/vite.svg'
 
 function onEditAvatar() {
-  // placeholder for file picker or modal
   alert('Change avatar - not implemented yet')
 }
 
 function onSave() {
-  // in the future save to API
   alert('Saved (demo only)')
 }
 </script>
