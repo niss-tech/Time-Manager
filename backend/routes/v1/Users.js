@@ -23,37 +23,22 @@ router.post("/", async (req, res) => {
     // Valider les données envoyées par le client avec le validateur UserValidator
     validatedUser = UsersValidator.parse(req.body);
   } catch (error) {
-    return res.status(400).json({ errors: error.errors }); // Renvoie l'erreur si la validation échoue
+    return res.status(400).json({ errors: error.issues });
   }
 
   try {
-    // Vérifier si l'email existe déjà dans la base de données
-    const existingUser = await prisma.users.findFirst({
-      where: { OR: [
-        { mail: validatedUser.mail }
-      ]},
-    });
-
-    if (existingUser) {
-      return res.status(400).json({ error: "Cet email est déjà utilisé." });
-    }
-
-    // Hacher le mot de passe avant de le sauvegarder
-    const hashedPassword = await bcrypt.hash(validatedUser.password, 10);
-
-    // Créer l'utilisateur dans la base de données
-    const newUser = await prisma.users.create({
+    const entry = await prisma.users.create({
       data: {
         firstname: validatedUser.firstname,
         lastname: validatedUser.lastname,
-        mail: validatedUser.mail,
-        password: hashedPassword,
+        password: validatedUser.password,
+        email: validatedUser.email,
         phone: validatedUser.phone,
         profile: validatedUser.profile,
       },
     });
 
-    res.status(201).json({user:newUser}); // Renvoie le nouvel utilisateur créé
+    res.status(201).json(entry);
   } catch (prismaError) {
     console.error(prismaError);
     res.status(500).json({ error: "Une erreur est survenue lors de la création de l'employé." });
