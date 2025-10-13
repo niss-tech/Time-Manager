@@ -12,12 +12,12 @@ export default {
   // 🔹 Connexion
   async login(req, res) {
     try {
-      const { mail, password } = req.body;
+      const { email, password } = req.body;
 
-      if (!mail || !password)
+      if (!email || !password)
         return res.status(400).json({ message: "Identifiants requis." });
 
-      const user = await prisma.users.findFirst({ where: { mail } });
+      const user = await prisma.users.findFirst({ where: { email } });
       if (!user)
         return res.status(401).json({ message: "Identifiants incorrects." });
 
@@ -26,7 +26,7 @@ export default {
         return res.status(401).json({ message: "Mot de passe incorrect." });
 
       const token = jwt.sign(
-        { id: user.idUser, mail: user.mail },
+        { id: user.idUser, email: user.email },
         SECRET_KEY,
         { expiresIn: "2h" }
       );
@@ -38,7 +38,7 @@ export default {
           id: user.idUser,
           firstname: user.firstname,
           lastname: user.lastname,
-          mail: user.mail,
+          email: user.email,
           phone: user.phone,
         },
       });
@@ -56,7 +56,7 @@ export default {
           idUser: true,
           firstname: true,
           lastname: true,
-          mail: true,
+          email: true,
           phone: true,
         },
       });
