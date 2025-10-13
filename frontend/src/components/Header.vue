@@ -13,7 +13,7 @@
 .app-header {
   background: #ffffff;
   border-bottom: 1px solid #e9ecef;
-  height: 44px; /* thin header */
+  height: 44px;
   display: flex;
   align-items: center;
 }
@@ -23,7 +23,7 @@
 }
 .app-header .date,
 .app-header .time {
-  font-size: 0.9rem; /* keep it small and minimalist */
+  font-size: 0.9rem;
   color: #495057;
 }
 </style>

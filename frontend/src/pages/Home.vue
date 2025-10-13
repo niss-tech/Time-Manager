@@ -25,7 +25,6 @@
 </template>
 
 <script setup>
-// Future API calls or logic can go here
 </script>
 
 <style scoped>
