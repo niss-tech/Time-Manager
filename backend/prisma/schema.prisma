@@ -1,140 +1,115 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
- model Users {
-  idUser         Int            @id @default(autoincrement())
-  email          String         @unique
-  firstname      String
-  lastname       String
-  password       String
-  phone          Int
-  profile        String?
-  
-  //Relations avec la table Roles via UserRoles
-  roles          UserRoles[]
 
-  //Relation avec la table Teams en tant que manager
-  managerTeams  Teams[]        @relation("ManagerTeams")
+model clocks {
+  idClock     Int       @id @default(autoincrement())
+  userId      Int
+  clockIn     DateTime
+  clockOut    DateTime?
+  hoursWorked Float?
+  users       users     @relation(fields: [userId], references: [idUser], map: "Clocks_userId_fkey")
 
-  //Relation avec la table Teams en tant que membre
-  memberTeams   TeamUser[]
-
-  //Relation avec la table Clocks
-  clocks        Clocks[]
-
-  //Relation avec la table Vacations
-  vacations     Vacations[]
-
-  //Relation avec la table Plannings
-  plannings     Plannings[]
-
-  //Relation avec la table Reports
-  reports       Reports[]
+  @@index([userId], map: "Clocks_userId_fkey")
 }
 
-model Roles {
-  idRole         Int            @id @default(autoincrement())
-  name           String         @unique
+model plannings {
+  idPlanning Int      @id @default(autoincrement())
+  userId     Int
+  date       DateTime
+  startTime  DateTime
+  endTime    DateTime
+  users      users    @relation(fields: [userId], references: [idUser], map: "Plannings_userId_fkey")
 
-  //Relations avec la table Users via UserRoles
-  users          UserRoles[]
+  @@index([userId], map: "Plannings_userId_fkey")
 }
 
-model UserRoles {
-  idUserRole     Int            @id @default(autoincrement())
-  userId         Int
-  roleId         Int
+model reports {
+  idReport  Int      @id @default(autoincrement())
+  kpi       String
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  userId    Int
+  teamId    Int
+  teams     teams    @relation(fields: [teamId], references: [idTeam], map: "Reports_teamId_fkey")
+  users     users    @relation(fields: [userId], references: [idUser], map: "Reports_userId_fkey")
 
-//Relations
-  user          Users @relation(fields: [userId], references: [idUser])
-  role          Roles @relation(fields: [roleId], references: [idRole])
-
-  @@unique([userId, roleId])
+  @@index([teamId], map: "Reports_teamId_fkey")
+  @@index([userId], map: "Reports_userId_fkey")
 }
 
-model Teams {
-  idTeam        Int            @id @default(autoincrement())
-  name           String         @unique
-  description    String?
-  managerId      Int
-
-  //Relations avec la table Users en tant que manager
-  manager        Users          @relation("ManagerTeams", fields: [managerId], references: [idUser])
-
-  //Relations avec la table Users en tant que membre
-  members        TeamUser[]
-
-  //Relations avec la table Reports
-  reports        Reports[]
-}
-model TeamUser {
-  id             Int            @id @default(autoincrement())
-  teamId         Int
-  userId         Int
-
-  //Relations
-  team          Teams @relation(fields: [teamId], references: [idTeam])
-  user          Users @relation(fields: [userId], references: [idUser])
-
-  @@unique([teamId, userId])
+model roles {
+  idRole    Int         @id @default(autoincrement())
+  name      String      @unique(map: "Roles_name_key")
+  userroles userroles[]
 }
 
-model Clocks{
-  idClock        Int            @id @default(autoincrement())
-  userId         Int
-  clockIn        DateTime
-  clockOut       DateTime?
-  hoursWorked    Float?
+model teams {
+  idTeam      Int        @id @default(autoincrement())
+  name        String     @unique(map: "Teams_name_key")
+  description String?
+  managerId   Int
+  reports     reports[]
+  users       users      @relation(fields: [managerId], references: [idUser], map: "Teams_managerId_fkey")
+  teamuser    teamuser[]
 
-  //Relations
-  user          Users @relation(fields: [userId], references: [idUser])
+  @@index([managerId], map: "Teams_managerId_fkey")
 }
 
-model Vacations{
-  idVacation     Int            @id @default(autoincrement())
-  userId         Int
-  startDate      DateTime
-  endDate        DateTime
-  status         String         @default("pending") // pending, approved, rejected
-  createdAt      DateTime       @default(now())
+model teamuser {
+  id     Int   @id @default(autoincrement())
+  teamId Int
+  userId Int
+  teams  teams @relation(fields: [teamId], references: [idTeam], map: "TeamUser_teamId_fkey")
+  users  users @relation(fields: [userId], references: [idUser], map: "TeamUser_userId_fkey")
 
-  //Relations
-  user          Users @relation(fields: [userId], references: [idUser])
+  @@unique([teamId, userId], map: "TeamUser_teamId_userId_key")
+  @@index([userId], map: "TeamUser_userId_fkey")
 }
 
-model Plannings{
-  idPlanning     Int            @id @default(autoincrement())
-  userId         Int
-  date           DateTime
-  startTime      DateTime
-  endTime        DateTime
+model userroles {
+  idUserRole Int   @id @default(autoincrement())
+  userId     Int
+  roleId     Int
+  roles      roles @relation(fields: [roleId], references: [idRole], map: "UserRoles_roleId_fkey")
+  users      users @relation(fields: [userId], references: [idUser], map: "UserRoles_userId_fkey")
 
-  //Relations
-  user          Users @relation(fields: [userId], references: [idUser])
+  @@unique([userId, roleId], map: "UserRoles_userId_roleId_key")
+  @@index([roleId], map: "UserRoles_roleId_fkey")
 }
 
-model Reports{
-  idReport       Int            @id @default(autoincrement())
-  kpi            String
-  startDate      DateTime
-  endDate        DateTime
-  createdAt      DateTime       @default(now())
-  userId         Int
-  teamId         Int
+model users {
+  idUser    Int         @id @default(autoincrement())
+  email     String      @unique(map: "Users_email_key")
+  firstname String
+  lastname  String
+  password  String
+  phone     Int
+  profile   String?
+  clocks    clocks[]
+  plannings plannings[]
+  reports   reports[]
+  teams     teams[]
+  teamuser  teamuser[]
+  userroles userroles[]
+  vacations vacations[]
+}
 
-  //Relations
-  user          Users @relation(fields: [userId], references: [idUser])
-  team          Teams @relation(fields: [teamId], references: [idTeam])
+model vacations {
+  idVacation Int      @id @default(autoincrement())
+  userId     Int
+  startDate  DateTime
+  endDate    DateTime
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  users      users    @relation(fields: [userId], references: [idUser], map: "Vacations_userId_fkey")
+
+  @@index([userId], map: "Vacations_userId_fkey")
 }
