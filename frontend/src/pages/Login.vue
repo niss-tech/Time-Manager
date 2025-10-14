@@ -54,7 +54,7 @@ async function login() {
 
     localStorage.setItem("token", res.data.token);
     message.value = "✅ Login successful! Redirecting...";
-    router.push("/dashboard");
+    router.push("/");
   } catch (err) {
     message.value = "❌ Invalid credentials";
   }
