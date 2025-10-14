@@ -5,6 +5,7 @@ on:
     branches: 
       - main
       - cicd
+      - auth
   pull_request:
     branches: 
       - main

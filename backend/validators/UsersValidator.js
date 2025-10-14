@@ -10,12 +10,12 @@ const UsersValidator = z.object({
     .string()
     .min(1, "Le nom est requis")
     .max(100, "Le nom est trop long"),
-  
-  mail: z
+
+  email: z
     .string()
-    .email("L'adresse mail n'est pas valide")
-    .max(100, "L'adresse mail est trop longue"),
-  
+    .email("L'adresse email n'est pas valide")
+    .max(100, "L'adresse email est trop longue"),
+
   password: z
     .string()
     .min(8, "Le mot de passe doit contenir au moins 8 caractères")
@@ -24,12 +24,11 @@ const UsersValidator = z.object({
       "Le mot de passe doit inclure au moins une majuscule, un chiffre et un caractère spécial"
     ),
 
-  phone : z
-    .string(),
+  phone: z.union([z.string(), z.number()]), 
 
   profile: z
     .string()
-    .min(1, "Le profile est requis"),
+    .min(1, "Le profil est requis"),
 });
 
 export default UsersValidator;
