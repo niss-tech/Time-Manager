@@ -1,3 +1,4 @@
+import { create } from "domain";
 import { z } from "zod"; 
 
 const ClocksValidator = z.object({
@@ -16,6 +17,11 @@ const ClocksValidator = z.object({
       })
       .refine((val) => !isNaN(Date.parse(val)), {
         message: "L'heure de début doit être une date valide",
+      }),
+
+    createdAt: z
+      .string({
+        invalid_type_error: "La date de création doit être une date valide",
       }),
 
     clockOut: z
