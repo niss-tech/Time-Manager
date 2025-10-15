@@ -4,6 +4,7 @@ import { verifyToken } from "../../middleware/AuthMiddleware.js";
 
 const router = express.Router();
 
+router.post("/register", AuthController.register); // ✅ ajout
 router.post("/login", AuthController.login);
 router.get("/profile", verifyToken, AuthController.profile);
 
