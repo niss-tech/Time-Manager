@@ -9,7 +9,7 @@ dotenv.config();
 const prisma = new PrismaClient();
 const SECRET_KEY = process.env.JWT_SECRET;
 
-// 🔹 Schémas Zod pour validation
+//  Schémas Zod pour validation
 const loginSchema = z.object({
   email: z.string().email("Email invalide."),
   password: z.string().min(4, "Mot de passe trop court."),
@@ -49,7 +49,7 @@ async register(req, res) {
     // Hacher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ Conversion du numéro avant l’insertion
+    //  Conversion du numéro avant l’insertion
     const parsedPhone = phone ? Number(phone) : null;
 
     const newUser = await prisma.users.create({
@@ -81,7 +81,7 @@ async register(req, res) {
 },
 
 
-  // 🔹 LOGIN
+  //  LOGIN
   async login(req, res) {
     try {
       if (!req.body || Object.keys(req.body).length === 0) {
@@ -129,7 +129,7 @@ async register(req, res) {
     }
   },
 
-  // 🔹 PROFILE
+  //  PROFILE
   async profile(req, res) {
     try {
       const user = await prisma.users.findUnique({

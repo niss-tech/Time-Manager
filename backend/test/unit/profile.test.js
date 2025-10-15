@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "../app.js";
+import { app } from "../../app.js";
 
 let token; // on stockera ici le JWT obtenu au login
 
