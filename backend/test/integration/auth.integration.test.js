@@ -15,7 +15,7 @@ describe("Auth Integration - Full Flow", () => {
   };
 
   beforeAll(async () => {
-    // 🔹 Nettoyage de l'utilisateur de test avant les tests
+    //  Nettoyage de l'utilisateur de test avant les tests
     await prisma.users.deleteMany({ where: { email: testUser.email } });
   });
 
@@ -23,7 +23,7 @@ describe("Auth Integration - Full Flow", () => {
     await prisma.$disconnect();
   });
 
-  // 1️⃣ Register success
+  // 1 Register success
   it("should register successfully with valid data", async () => {
     const res = await request(app).post("/v1/auth/register").send(testUser);
 
@@ -32,7 +32,7 @@ describe("Auth Integration - Full Flow", () => {
     expect(res.body.user.email).toBe(testUser.email);
   });
 
-  // 2️⃣ Register duplicate email
+  // 2️Register duplicate email
   it("should fail if email is already used", async () => {
     const res = await request(app).post("/v1/auth/register").send(testUser);
 
@@ -40,7 +40,7 @@ describe("Auth Integration - Full Flow", () => {
     expect(res.body).toHaveProperty("error", "Cet email est déjà utilisé.");
   });
 
-  // 3️⃣ Login success
+  //  Login success
   it("should login successfully with correct credentials", async () => {
     const res = await request(app).post("/v1/auth/login").send({
       email: testUser.email,
@@ -55,7 +55,7 @@ describe("Auth Integration - Full Flow", () => {
     globalThis.token = res.body.token;
   });
 
-  // 4️⃣ Login with wrong password
+  //  Login with wrong password
   it("should fail login with wrong password", async () => {
     const res = await request(app).post("/v1/auth/login").send({
       email: testUser.email,
@@ -66,7 +66,7 @@ describe("Auth Integration - Full Flow", () => {
     expect(res.body).toHaveProperty("error", "Mot de passe incorrect.");
   });
 
-  // 5️⃣ Access profile with valid token
+  // Access profile with valid token
   it("should access profile with valid JWT", async () => {
     const res = await request(app)
       .get("/v1/auth/profile")
@@ -76,7 +76,7 @@ describe("Auth Integration - Full Flow", () => {
     expect(res.body).toHaveProperty("email", testUser.email);
   });
 
-  // 6️⃣ Access profile without token
+  // Access profile without token
   it("should reject profile access without token", async () => {
     const res = await request(app).get("/v1/auth/profile");
 
@@ -84,7 +84,7 @@ describe("Auth Integration - Full Flow", () => {
     expect(res.body).toHaveProperty("error", "Token manquant.");
   });
 
-  // 7️⃣ Access profile with invalid token
+  //  Access profile with invalid token
   it("should reject profile access with invalid token", async () => {
     const res = await request(app)
       .get("/v1/auth/profile")

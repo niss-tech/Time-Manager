@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 describe("Auth Register - full coverage", () => {
   beforeAll(async () => {
-    // 🔹 Supprime l'utilisateur de test s'il existe déjà
+    // Supprime l'utilisateur de test s'il existe déjà
     await prisma.users.deleteMany({
       where: { email: "newuser@test.com" },
     });

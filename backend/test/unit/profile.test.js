@@ -4,7 +4,7 @@ import { app } from "../../app.js";
 let token; // on stockera ici le JWT obtenu au login
 
 describe("Auth Profile - Token JWT", () => {
-  // 🔹 Étape 1 : login avant de tester le profil
+  //  Étape 1 : login avant de tester le profil
   beforeAll(async () => {
     const loginResponse = await request(app)
       .post("/v1/auth/login")
@@ -20,7 +20,7 @@ describe("Auth Profile - Token JWT", () => {
     token = loginResponse.body.token;
   });
 
-  // ✅ Test 1 : accès autorisé avec token valide
+  //  Test 1 : accès autorisé avec token valide
   it("should return user profile when token is valid", async () => {
     const response = await request(app)
       .get("/v1/auth/profile")
@@ -32,13 +32,13 @@ describe("Auth Profile - Token JWT", () => {
     expect(response.body).toHaveProperty("lastname");
   });
 
-  // ❌ Test 2 : refus sans token
+  //  Test 2 : refus sans token
   it("should return 401 if no token is provided", async () => {
     const response = await request(app).get("/v1/auth/profile");
     expect(response.statusCode).toBe(401);
   });
 
-  // ❌ Test 3 : refus avec token invalide
+  //  Test 3 : refus avec token invalide
   it("should return 403 if token is invalid", async () => {
     const response = await request(app)
       .get("/v1/auth/profile")

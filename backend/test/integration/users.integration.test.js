@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-describe("👥 Users Integration - Full CRUD Flow (aligned with current backend)", () => {
+describe("Users Integration - Full CRUD Flow (aligned with current backend)", () => {
   const manager = {
     firstname: "Manager",
     lastname: "Test",
