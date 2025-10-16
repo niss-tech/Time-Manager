@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-describe("Auth Integration Flow", () => {
+describe("Auth Integration - Full Flow", () => {
   const testUser = {
     firstname: "Integration",
     lastname: "User",
@@ -15,7 +15,7 @@ describe("Auth Integration Flow", () => {
   };
 
   beforeAll(async () => {
-    // Nettoyage : supprime le user s’il existe déjà
+    // 🔹 Nettoyage de l'utilisateur de test avant les tests
     await prisma.users.deleteMany({ where: { email: testUser.email } });
   });
 
@@ -23,37 +23,74 @@ describe("Auth Integration Flow", () => {
     await prisma.$disconnect();
   });
 
-  it("should register, login, and access profile successfully", async () => {
-    // Register
-    const registerRes = await request(app)
-      .post("/v1/auth/register")
-      .send(testUser);
-    expect(registerRes.statusCode).toBe(201);
-    expect(registerRes.body).toHaveProperty("user");
+  // 1️⃣ Register success
+  it("should register successfully with valid data", async () => {
+    const res = await request(app).post("/v1/auth/register").send(testUser);
 
-    // Login
-    const loginRes = await request(app)
-      .post("/v1/auth/login")
-      .send({
-        email: testUser.email,
-        password: testUser.password,
-      });
-    expect(loginRes.statusCode).toBe(200);
-    expect(loginRes.body).toHaveProperty("token");
-    const token = loginRes.body.token;
-
-    // Profile (avec le token JWT)
-    const profileRes = await request(app)
-      .get("/v1/auth/profile")
-      .set("Authorization", `Bearer ${token}`);
-    expect(profileRes.statusCode).toBe(200);
-    expect(profileRes.body.email).toBe(testUser.email);
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty("user");
+    expect(res.body.user.email).toBe(testUser.email);
   });
 
-it("should reject profile access without token", async () => {
-  const res = await request(app).get("/v1/auth/profile");
-  expect(res.statusCode).toBe(401);
-  expect(res.body).toHaveProperty("error", "Token manquant.");
-});
+  // 2️⃣ Register duplicate email
+  it("should fail if email is already used", async () => {
+    const res = await request(app).post("/v1/auth/register").send(testUser);
 
+    expect(res.statusCode).toBe(409);
+    expect(res.body).toHaveProperty("error", "Cet email est déjà utilisé.");
+  });
+
+  // 3️⃣ Login success
+  it("should login successfully with correct credentials", async () => {
+    const res = await request(app).post("/v1/auth/login").send({
+      email: testUser.email,
+      password: testUser.password,
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("token");
+    expect(typeof res.body.token).toBe("string");
+
+    // Stocker le token pour les tests suivants
+    globalThis.token = res.body.token;
+  });
+
+  // 4️⃣ Login with wrong password
+  it("should fail login with wrong password", async () => {
+    const res = await request(app).post("/v1/auth/login").send({
+      email: testUser.email,
+      password: "WrongPassword!",
+    });
+
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toHaveProperty("error", "Mot de passe incorrect.");
+  });
+
+  // 5️⃣ Access profile with valid token
+  it("should access profile with valid JWT", async () => {
+    const res = await request(app)
+      .get("/v1/auth/profile")
+      .set("Authorization", `Bearer ${globalThis.token}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("email", testUser.email);
+  });
+
+  // 6️⃣ Access profile without token
+  it("should reject profile access without token", async () => {
+    const res = await request(app).get("/v1/auth/profile");
+
+    expect(res.statusCode).toBe(401); // ⚠️ Ajusté à 401 selon ton middleware
+    expect(res.body).toHaveProperty("error", "Token manquant.");
+  });
+
+  // 7️⃣ Access profile with invalid token
+  it("should reject profile access with invalid token", async () => {
+    const res = await request(app)
+      .get("/v1/auth/profile")
+      .set("Authorization", "Bearer invalid.token.test");
+
+    expect(res.statusCode).toBe(403);
+    expect(res.body).toHaveProperty("error", "Token invalide ou expiré.");
+  });
 });
