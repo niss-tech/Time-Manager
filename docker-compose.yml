@@ -1,8 +1,7 @@
-
-
 services:
   backend:
-    image: nisstech/time-manager-backend:latest   # image tiré depuis Docker Hub
+    build: ./backend
+    image: time-manager-backend:local
     container_name: time-manager-backend
     ports:
       - "3000:3000"
@@ -27,6 +26,14 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: time-manager-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend   
 
 volumes:
   db_data:
