@@ -1,8 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import userRoutes from "./routes/v1/Users.js";
-import authRoutes from "./routes/v1/auth.js";
+import userRoutes from "./routes/Users.js";
+import authRoutes from "./routes/auth.js";
+import clocksRoutes from "./routes/Clocks.js";
 
 dotenv.config();
 const app = express();
@@ -26,8 +27,9 @@ app.use((req, res, next) => {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use("/v1/users", userRoutes);
-app.use("/v1/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
+app.use("/clocks", clocksRoutes);
 
 app.listen(PORT || 3000, () => {
   console.log(`API running on port ${PORT || 3000}`);
