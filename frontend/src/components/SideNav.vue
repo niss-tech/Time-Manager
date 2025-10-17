@@ -1,9 +1,9 @@
 <template>
   <aside class="sidenav bg-subtle border-end p-3 d-none d-md-block">
-    <div class="profile d-flex align-items-center mb-3">
+    <div v-if="user" class="profile d-flex align-items-center mb-3">
       <img :src="avatar" alt="avatar" class="avatar me-2"/>
       <div>
-        <div class="fw-bold">{{ firstName }} {{ lastName }}</div>
+        <div class="fw-bold">{{ user.firstname }} {{ user.lastname }}</div>
         <small class="text-muted">Dashboard</small>
       </div>
     </div>
@@ -64,19 +64,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-
-const props = defineProps({
-  firstName: { type: String, default: 'John' },
-  lastName: { type: String, default: 'Doe' },
-  avatar: { type: String, default: '/vite.svg' },
-})
 
 const open = ref(false)
 const route = useRoute()
+const user = ref(null)
+const avatar = ref('/vite.svg')
 
-const { firstName, lastName, avatar } = props
+onMounted(() => {
+  const storedUser = JSON.parse(localStorage.getItem("user"))
+  if (storedUser) {
+    user.value = storedUser
+    if (storedUser.avatar) avatar.value = storedUser.avatar
+  } else {
+    console.warn("Aucun utilisateur trouvé dans le localStorage")
+  }
+})
 
 function isActive(path) {
   return route.path === path
