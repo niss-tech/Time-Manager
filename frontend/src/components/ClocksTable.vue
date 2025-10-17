@@ -1,3 +1,27 @@
+<script>
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const clocks = ref([]);
+
+const fetchClocksByIdUser = async (userId) => {
+    const response = await fetch(`http://127.0.0.1:3000/clocks/user/${userId}`);
+    const data = await response.json();
+    clocks.value = data;
+    console.log("Clocks for user", userId, "fetched:", data);
+};
+
+onMounted(() => {
+  // Exemple : si tu stockes l'user dans le localStorage
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user && user.id) {
+    fetchClocksByIdUser(user.id);
+  } else {
+    console.error("Aucun utilisateur trouvé");
+  }
+});
+</script>
 <template>
     <div class="d-flex flex-column justify-content-between mx-auto my-4 shadow card p-3">
         <h4 class="fw-semibold mt-2 mb-4">My previous clocks</h4>
@@ -20,53 +44,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td scope="row">15/10/2025</td>
-                    <td class="text-danger">09:24</td>
-                    <td class="text-success">17:33</td>
-                    <td class="text-success">08:09</td>
-                </tr>
-                <tr>
-                    <td scope="row">14/10/2025</td>
-                    <td class="text-danger">09:42</td>
-                    <td class="text-success">17:30</td>
-                    <td class="text-danger">07:48</td>
-                </tr>
-                <tr>
-                    <td scope="row">13/10/2025</td>
-                    <td class="text-success">09:24</td>
-                    <td class="text-success">17:33</td>
-                    <td class="text-success">08:09</td>
-                </tr>
-                <tr>
-                    <td scope="row">12/10/2025</td>
-                    <td class="text-success">09:24</td>
-                    <td class="text-success">17:33</td>
-                    <td class="text-success">08:09</td>
-                </tr>
-                <tr>
-                    <td scope="row">09/10/2025</td>
-                    <td class="text-success">09:24</td>
-                    <td class="text-success">17:33</td>
-                    <td class="text-success">08:09</td>
-                </tr>
-                <tr>
-                    <td scope="row">08/10/2025</td>
-                    <td class="text-success">09:24</td>
-                    <td class="text-success">17:33</td>
-                    <td class="text-success">08:09</td>
-                </tr>
-                <tr>
-                    <td scope="row">07/10/2025</td>
-                    <td class="text-success">09:24</td>
-                    <td class="text-success">17:33</td>
-                    <td class="text-success">08:09</td>
-                </tr>
-                <tr>
-                    <td scope="row">06/10/2025</td>
-                    <td class="text-success">09:24</td>
-                    <td class="text-success">17:33</td>
-                    <td class="text-success">08:09</td>
+                <tr v-for="clock in clocks" :key="clock.id" @click="redirection(clock.id)">
+                    <td scope="row">{{ clock.createdAt }}</td>
+                    <td class="text-danger">{{ clock.clockin }}</td>
+                    <td class="text-success">{{clock.clockout}}</td>
+                    <td class="text-success">{{clock.hoursWorked}}</td>
                 </tr>
             </tbody>
         </table>
