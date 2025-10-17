@@ -25,7 +25,7 @@ const registerSchema = z.object({
 });
 
 export default {
- // 🔹 REGISTER
+ // REGISTER
 async register(req, res) {
   try {
     if (!req.body || Object.keys(req.body).length === 0) {

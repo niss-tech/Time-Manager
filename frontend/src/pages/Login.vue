@@ -47,16 +47,16 @@ const router = useRouter();
 
 async function login() {
   try {
-    const res = await api.post("/v1/auth/login", {
+    const res = await api.post("/auth/login", {
       email: email.value,
       password: password.value,
     });
 
     localStorage.setItem("token", res.data.token);
-    message.value = "✅ Login successful! Redirecting...";
+    message.value = "Login successful! Redirecting...";
     router.push("/");
   } catch (err) {
-    message.value = "❌ Invalid credentials";
+    message.value = "Invalid credentials";
   }
 }
 </script>
