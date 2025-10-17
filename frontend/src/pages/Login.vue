@@ -53,10 +53,10 @@ async function login() {
     });
 
     localStorage.setItem("token", res.data.token);
-    message.value = "✅ Login successful! Redirecting...";
+    message.value = "Login successful! Redirecting...";
     router.push("/");
   } catch (err) {
-    message.value = "❌ Invalid credentials";
+    message.value = "Invalid credentials";
   }
 }
 </script>
