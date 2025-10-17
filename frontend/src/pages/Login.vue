@@ -53,6 +53,8 @@ async function login() {
     });
 
     localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
+    // console.log("Login successful:", res.data.user);
     message.value = "✅ Login successful! Redirecting...";
     router.push("/");
   } catch (err) {
