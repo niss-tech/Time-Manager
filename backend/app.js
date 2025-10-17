@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import userRoutes from "./routes/v1/Users.js";
 import authRoutes from "./routes/v1/auth.js";
+import clocksRoutes from "./routes/v1/Clocks.js";
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,8 @@ app.use(express.json());
 
 app.use("/v1/users", userRoutes);
 app.use("/v1/auth", authRoutes);
+app.use("/v1/clocks", clocksRoutes);
+
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server running on port ${process.env.PORT || 3000}`);

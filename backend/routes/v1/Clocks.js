@@ -3,8 +3,9 @@ import ClocksController from "../../controllers/ClocksController.js";
 
 const router = express.Router();
 
-router.post("/", ClocksController.createClockIn);
-router.put("/:id/clock-out", ClocksController.createClockOut);
+router.post("/", ClocksController.clockIn);
+router.put("/:id/clockout", ClocksController.clockOut);
 router.get("/", ClocksController.getAllClocks);
 router.get("/user/:userId", ClocksController.getClockByIdUser);
 
+export default router;
