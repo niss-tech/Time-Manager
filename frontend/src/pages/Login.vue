@@ -58,7 +58,7 @@ async function login() {
     message.value = "✅ Login successful! Redirecting...";
     router.push("/");
   } catch (err) {
-    message.value = "❌ Invalid credentials";
+    message.value = "Invalid credentials";
   }
 }
 </script>
