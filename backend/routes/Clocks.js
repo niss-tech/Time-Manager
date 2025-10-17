@@ -1,5 +1,5 @@
 import express from "express";
-import ClocksController from "../../controllers/ClocksController.js";
+import ClocksController from "../controllers/ClocksController.js";
 
 const router = express.Router();
 
